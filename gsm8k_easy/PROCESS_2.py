@@ -64,9 +64,9 @@ import pandas as pd
 import re
 
 # ====== 文件路径（请根据实际修改）======
-index_csv_path = "filtered_pass@10_equals_1.csv"
-log_file_path = "infer_log.txt"
-output_csv_path = "multi_answers_per_sample.csv"
+index_csv_path = "easy_train_pass@10_equals_1.csv"
+log_file_path = "../gsm8k/infer_log.txt"
+output_csv_path = "multi_answers_per_sample_for_easy_train.csv"
 
 # ====== 加载需要保留的样本 index ======
 df = pd.read_csv(index_csv_path)
