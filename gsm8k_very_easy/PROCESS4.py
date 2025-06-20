@@ -2,8 +2,8 @@
 import pandas as pd
 
 # 读取两个CSV文件
-gsm8k_df = pd.read_csv('h:/CoT剪枝/code/gsm8k/filtered_pass@10_equals_1.csv')
-gsm8k_7b_df = pd.read_csv('h:/CoT剪枝/code/gsm8k_7b/filtered_pass@10_equals_1.csv')
+gsm8k_df = pd.read_csv('h:/CoT剪枝/code/gsm8k_math_inferance/filtered_pass@10_equals_1.csv')
+gsm8k_7b_df = pd.read_csv('h:/CoT剪枝/code/gsm8k_base_inferance/filtered_pass@10_equals_1.csv')
 
 # 提取两个文件中的gsm8k_index列
 gsm8k_indices = set(gsm8k_df['gsm8k_index'])
