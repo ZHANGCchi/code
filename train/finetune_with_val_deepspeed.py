@@ -17,7 +17,7 @@ except:
 import transformers
 
 from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
-from swanlab.integration.huggingface import SwanLabCallback
+from swanlab.integration.transformers import SwanLabCallback
 
 # 定义忽略标记，用于屏蔽损失计算中的某些标记(如输入部分)
 IGNORE_INDEX = -100
