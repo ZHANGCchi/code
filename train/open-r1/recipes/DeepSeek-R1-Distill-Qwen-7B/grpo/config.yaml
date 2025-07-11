@@ -1,0 +1,64 @@
+# Model arguments
+model_name_or_path: "/root/autodl-tmp/openr1/open-r1/merged-model"
+model_revision: main
+torch_dtype: float16
+attn_implementation: sdpa
+
+# LoRA配置
+use_peft: true
+peft_method: "lora"
+lora_r: 16
+lora_alpha: 32
+lora_dropout: 0.05
+target_modules: ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
+
+# Data training arguments
+dataset_name: "./data_temp/data_for_grpo"
+dataset_prompt_column: problem
+# system_prompt: "You are a helpful AI Assistant that provides well-reasoned and detailed responses. You first think about the reasoning process as an internal monologue and then provide the user with the answer. Respond in the following format: <think>\n...\n</think>\n<answer>\n...\n</answer>"
+system_prompt: "Please reason step by step, and put your final answer within \\boxed{}."
+
+# GRPO trainer config
+bf16: false
+fp16: true
+use_vllm: true  # 可以与LoRA一起使用
+vllm_mode: "server"
+vllm_server_base_url: "http://0.0.0.0:8000"
+do_eval: false
+gradient_accumulation_steps: 3
+gradient_checkpointing: true
+gradient_checkpointing_kwargs:
+  use_reentrant: false
+hub_model_id: Qwen2.5-7B-GRPO-LoRA
+hub_strategy: every_save
+learning_rate: 1.0e-06
+log_completions: true
+log_level: info
+logging_steps: 1
+max_prompt_length: 512
+max_completion_length: 3584
+num_generations: 6
+num_train_epochs: 3
+output_dir: data/Qwen2.5-7B-GRPO-LoRA
+per_device_train_batch_size: 6
+report_to:
+- swanlab
+reward_funcs:
+- accuracy
+- reasoning_steps
+- repetition_penalty
+reward_weights:
+- 1.0
+- 0.2
+- 0.4
+
+# 重复惩罚相关参数
+repetition_n_grams: 3       # n-gram大小，一般为3-4
+repetition_max_penalty: -1.0  # 最大惩罚值（必须为负数）
+
+save_strategy: "steps"
+save_steps: 200
+save_total_limit: 3
+seed: 42
+temperature: 0.7
+warmup_ratio: 0.1

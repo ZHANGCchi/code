@@ -1,0 +1,70 @@
+# Config for fine-tuning Qwen/Qwen2.5-7B on the Math subset with LoRA
+# Model arguments
+model_name_or_path: Qwen/Qwen2.5-7B # <--- CHANGED: Switched to the new base model
+model_revision: main
+torch_dtype: float16
+attn_implementation: sdpa
+
+# --- ADDED FOR LORA ---
+use_peft: true
+peft_method: lora
+lora_r: 32
+lora_alpha: 64
+lora_dropout: 0.05
+lora_target_modules:  # <--- 新增：最关键的参数
+  - q_proj
+  - k_proj
+  - v_proj
+  - o_proj
+  - gate_proj
+  - up_proj
+  - down_proj
+bias: 'none'  # <--- (可选) 新增：明确指定 bias 训练方式
+task_type: 'CAUSAL_LM' # <--- (可选) 新增：明确指定任务类型
+
+# --- REMOVED chat_template ---
+# The original chat_template was removed. The script will now automatically 
+# load the correct template from the Qwen/Qwen2.5-7B tokenizer.
+
+# Data training arguments
+# dataset_name: open-r1/Mixture-of-Thoughts
+# dataset_config: math # <--- CHANGED: Switched to the 'math' subset
+train_file: "/root/autodl-tmp/openr1/open-r1/data_temp/qwen-max-dataset/*.jsonl"
+dataset_num_proc: 12
+eos_token: <|im_end|> # Qwen2 models use this token
+
+# SFT trainer config
+bf16: false
+fp16: True
+do_eval: false
+eval_strategy: 'no'
+gradient_accumulation_steps: 4
+gradient_checkpointing: True
+gradient_checkpointing_kwargs:
+  use_reentrant: True
+hub_model_id: Qwen2.5-7B-Math-Finetune-LoRA # <--- (Recommended) CHANGED: New Hub ID
+hub_strategy: every_save
+learning_rate: 4.0e-05
+log_level: info
+logging_steps: 1
+logging_strategy: steps
+lr_scheduler_type: cosine_with_min_lr
+lr_scheduler_kwargs:
+  min_lr_rate: 0.1
+packing: false
+max_grad_norm: 0.2
+max_length: 4096 # This value is safe for Qwen2.5-7B
+max_steps: -1
+num_train_epochs: 5
+output_dir: data/Qwen2.5-7B-Math-Finetune-LoRA # <--- (Recommended) CHANGED: New output directory
+overwrite_output_dir: true
+per_device_eval_batch_size: 1
+per_device_train_batch_size: 1
+push_to_hub: False
+report_to: "none" # Set to "none" because we are using the SwanLab callback
+save_strategy: steps
+save_steps: 100
+save_total_limit: 2
+seed: 42
+use_liger_kernel: true
+warmup_ratio: 0.03
