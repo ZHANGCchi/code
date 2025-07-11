@@ -1,3 +1,6 @@
+#   使用model.generate进行批量推理
+#   支持基础模型和微调后的LoRA模型，通过--use_lora参数切换
+#   输出结果包含每个问题的预测答案和token使用情况
 import json
 import torch
 import argparse
